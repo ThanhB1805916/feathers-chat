@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Listener</title>
+  </head>
+  <script src="//unpkg.com/@feathersjs/client@^4.3.0/dist/feathers.js"></script>
+  <script src="/socket.io/socket.io.js"></script>
+
+  <body>
+    <script>
+      // Establish a Socket.io connection
+      const socket = io();
+      // Initialize our Feathers client application through Socket.io
+      // with hooks and authentication.
+      const client = feathers();
+
+      client.configure(feathers.socketio(socket));
+      // Use localStorage to store our login token
+      client.configure(feathers.authentication());
+
+      client
+        .reAuthenticate()
+        .then(() => {
+          console.log("Authenticated!");
+        })
+        .catch((error) => {
+          console.error("Error authenticating!", error);
+        });
+
+      client.service("messages").on("created", () => {
+        alert("hello");
+      });
+
+      console.log("init");
+    </script>
+  </body>
+</html>
