@@ -9,7 +9,9 @@ pipeline {
 
     stage('Install package ') {
       steps {
-        sh 'npm install'
+        nodejs("NodeJS-20.6.1"){
+          sh 'npm install'
+        }
       }
     }
 
