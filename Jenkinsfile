@@ -6,6 +6,11 @@ pipeline {
         git(url: 'https://github.com/ThanhB18059162022/feathers-chat', branch: 'master')
       }
     }
+     stage('Ls') {
+      steps {
+        echo "hello world"
+      }
+    }
 
   }
 }
