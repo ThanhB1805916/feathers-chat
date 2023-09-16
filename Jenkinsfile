@@ -6,9 +6,16 @@ pipeline {
         git(url: 'https://github.com/ThanhB18059162022/feathers-chat', branch: 'master')
       }
     }
-     stage('Ls') {
+
+    stage('Ls') {
       steps {
-        echo "hello world"
+        echo 'hello world'
+      }
+    }
+
+    stage('Install package ') {
+      steps {
+        sh 'npm install'
       }
     }
 
