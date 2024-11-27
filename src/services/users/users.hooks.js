@@ -1,4 +1,5 @@
 const { authenticate } = require("@feathersjs/authentication").hooks;
+const { session } = require("../../neo4j");
 
 const { hashPassword, protect } =
   require("@feathersjs/authentication-local").hooks;
@@ -22,7 +23,28 @@ module.exports = {
     ],
     find: [],
     get: [],
-    create: [],
+    create: [
+      async (context) => {
+        const { result } = context; // The newly created user
+
+        try {
+          await session.run(
+            "CREATE (nd:NguoiDung {id: $id, email: $email, avatar: $avatar})",
+            {
+              id: result._id,
+              email: result.email,
+              avatar: result.avatar,
+            }
+          );
+        } catch (error) {
+          // Handle errors gracefully, perhaps log them or even revert the user creation
+          console.error("Error creating Neo4j node:", error);
+          throw error; // Re-throw to trigger Feathers error handling
+        }
+
+        return context;
+      },
+    ],
     update: [],
     patch: [],
     remove: [],

@@ -51,6 +51,7 @@
     "cors": "^2.8.5",
     "feathers-nedb": "^6.0.0",
     "helmet": "^4.6.0",
+    "neo4j-driver": "^5.26.0",
     "serve-favicon": "^2.5.0",
     "winston": "^3.7.2"
   },
