@@ -44,8 +44,8 @@
     "@feathersjs/errors": "^4.5.15",
     "@feathersjs/express": "^4.5.15",
     "@feathersjs/feathers": "^4.5.15",
-    "@feathersjs/socketio": "^5.0.24",
-    "@feathersjs/transport-commons": "^4.5.15",
+    "@feathersjs/socketio": "^5.0.31",
+    "@feathersjs/transport-commons": "^5.0.31",
     "@seald-io/nedb": "^2.2.2",
     "compression": "^1.7.4",
     "cors": "^2.8.5",
@@ -55,9 +55,9 @@
     "winston": "^3.7.2"
   },
   "devDependencies": {
-    "axios": "^0.28.0",
+    "axios": "^1.7.8",
     "mocha": "^9.2.2",
-    "nodemon": "^2.0.22",
+    "nodemon": "^3.1.7",
     "standard": "^17.0.0"
   }
 }
