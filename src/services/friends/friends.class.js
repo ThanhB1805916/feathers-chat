@@ -5,16 +5,16 @@ const { session } = require("../../neo4j");
 exports.Friends = class Friends {
   // Find all friends or filter by properties
   async find(params) {
-    const { query } = params;
+    const { query, user } = params;
 
     // Example: Find all friends or filter by a property (e.g., name)
     const result = await session.run(
       `
-      MATCH (f:Friend)
-      ${query.name ? "WHERE f.name = $name" : ""}
-      RETURN f
+      MATCH (n:NguoiDung {id: $id})
+      -[:BAN_BE]->(f:NguoiDung)
+      RETURN f;
       `,
-      { name: query.name }
+      { id: user._id }
     );
 
     // Return friends' properties

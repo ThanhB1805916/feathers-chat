@@ -213,13 +213,21 @@ const addEventListener = (selector, event, handler) => {
 
 // "Signup and login" button click handler
 addEventListener("#signup", "click", async () => {
-  // For signup, create a new user and then log them in
-  const credentials = getCredentials();
+  try {
+    // For signup, create a new user and then log them in
+    const credentials = getCredentials();
 
-  // First create the user
-  await client.service("users").create(credentials);
-  // If successful log them in
-  await login(credentials);
+    // First create the user
+    await client.service("users").create(credentials);
+
+    // If successful log them in
+    await login(credentials);
+  } catch (error) {
+    console.error(error);
+    if (error.message?.includes("Can't insert key")) {
+      alert("Email đã được sửa dụng");
+    }
+  }
 });
 
 // "Login" button click handler
