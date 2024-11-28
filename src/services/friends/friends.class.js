@@ -28,7 +28,6 @@ exports.Friends = class Friends {
 
   async suggestFriends(params) {
     const { query, user } = params;
-    console.log("🚀 ~ Friends ~ suggestFriends ~ query:", query);
     const userId = query.id || user._id;
 
     const result = await session.run(
