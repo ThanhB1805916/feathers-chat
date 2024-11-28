@@ -1,8 +1,25 @@
-CREATE (friendA:Friend {name:'Friend A', dob: date('2012-11-27'), hobby:'Playing games.'});
-CREATE (friendB:Friend {name:'Friend B', dob: date('2012-01-22'), hobby:'Playing games.'});
+MATCH (u:User) RETURN u LIMIT 25;
 
-CREATE (friendA)-[:FRIEND_WITH]->(friendB);
+// Get all friend of user
+MATCH (n:User {id: $id})-[:FRIEND]->(b:User)
+RETURN b;
 
-MATCH (n1:NguoiDung {id: 1}), (n2:NguoiDung {id: 2})
-MERGE  (n1)-[:BAN_BE]->(n2)
-RETURN n1, n2;
+// Add friend
+// MATCH (u1:User {id: $id1})
+// MATCH (u2:User {id: $id2})
+// MERGE (u1)-[:FRIEND]->(u2)
+// MERGE (u2)-[:FRIEND]->(u1)
+// RETURN u1, u2;
+MATCH (u1:User {id: "eI9sD37dyDWDARfE"})
+MATCH (u2:User {id: "dgb5hP2ccIAYm4Xg"})
+MERGE (u1)-[:FRIEND]->(u2)
+MERGE (u2)-[:FRIEND]->(u1)
+RETURN u1, u2;
+
+
+// Unfriend
+// MATCH (u1:User {id: $id1})-[r:FRIEND]-(u2:User {id: $id2})
+// DELETE r;
+MATCH (u1:User {id: "eI9sD37dyDWDARfE"})-[r:FRIEND]-(u2:User {id: "dgb5hP2ccIAYm4Xg"})
+DELETE r;
+

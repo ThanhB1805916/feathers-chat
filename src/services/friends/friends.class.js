@@ -25,9 +25,10 @@ exports.Friends = class Friends {
   async create(data, params) {
     const result = await session.run(
       `
-      MATCH (u1:User {id: $id1}), (u2:User {id: $id2})
-      MERGE  (u1)-[:FRIEND]->(u2)
-      MERGE  (u2)-[:FRIEND]->(u1)
+      MATCH (u1:User {id: $id1})
+      MATCH (u2:User {id: $id2})
+      MERGE (u1)-[:FRIEND]->(u2)
+      MERGE (u2)-[:FRIEND]->(u1)
       RETURN u1, u2;
       `,
       { id1: data.id1, id2: data.id2 }
@@ -46,7 +47,7 @@ exports.Friends = class Friends {
 
     const result = await session.run(
       `
-      MATCH (u1:User {id: $id1})-[r:FRIEND]->(u2:User {id: $id2})
+      MATCH (u1:User {id: $id1})-[r:FRIEND]-(u2:User {id: $id2})
       DELETE r;
       `,
       { id1: query.id1, id2: query.id2 }
