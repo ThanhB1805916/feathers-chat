@@ -7,13 +7,14 @@ exports.Friends = class Friends {
   async find(params) {
     const { query, user } = params;
 
-    // Example: Find all friends or filter by a property (e.g., name)
+    const id = query.id || user._id;
+
     const result = await session.run(
       `
-      MATCH (n:NguoiDung {id: $id})-[:BAN_BE]->(b:NguoiDung)
+      MATCH (n:User {id: $id})-[:FRIEND]->(b:User)
       RETURN b;
       `,
-      { id: user._id }
+      { id: id }
     );
 
     // Return friends' properties
@@ -24,46 +25,33 @@ exports.Friends = class Friends {
   async create(data, params) {
     const result = await session.run(
       `
-      CREATE (f:Friend {name: $name, age: $age, city: $city})
-      RETURN f
+      MATCH (u1:User {id: $id1}), (u2:User {id: $id2})
+      MERGE  (u1)-[:FRIEND]->(u2)
+      MERGE  (u2)-[:FRIEND]->(u1)
+      RETURN u1, u2;
       `,
-      { name: data.name, age: data.age, city: data.city }
+      { id1: data.id1, id2: data.id2 }
     );
 
-    // Return the created friend's properties
-    return result.records.map((record) => record.get("f").properties)[0];
-  }
-
-  // Update a friend's properties
-  async patch(id, data, params) {
-    const result = await session.run(
-      `
-      MATCH (f:Friend)
-      WHERE id(f) = $id
-      SET f += $properties
-      RETURN f
-      `,
-      { id: parseInt(id, 10), properties: data }
-    );
-
-    return result.records.map((record) => record.get("f").properties)[0];
+    // Return friends' properties
+    return result.records.map((record) => ({
+      u1: record.get("u1").properties,
+      u2: record.get("u2").properties,
+    }));
   }
 
   // Remove a friend by ID
   async remove(id, params) {
+    const { query } = params;
+
     const result = await session.run(
       `
-      MATCH (f:Friend)
-      WHERE id(f) = $id
-      DETACH DELETE f
-      RETURN f
+      MATCH (u1:User {id: $id1})-[r:FRIEND]->(u2:User {id: $id2})
+      DELETE r;
       `,
-      { id: parseInt(id, 10) }
+      { id1: query.id1, id2: query.id2 }
     );
 
-    return {
-      id,
-      ...result.records.map((record) => record.get("f").properties)[0],
-    };
+    return result.records;
   }
 };
