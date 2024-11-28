@@ -1,0 +1,75 @@
+<html lang="en">
+  <head>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1, user-scalable=0"
+    />
+    <title>FeathersJS chat</title>
+    <link rel="shortcut icon" href="../favicon.ico" />
+    <link
+      rel="stylesheet"
+      href="//unpkg.com/feathers-chat@4.0.0/public/base.css"
+    />
+    <link
+      rel="stylesheet"
+      href="//unpkg.com/feathers-chat@4.0.0/public/chat.css"
+    />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+  </head>
+  <body>
+    <div id="app" class="flex flex-column">
+      <main class="flex flex-column">
+        <header class="title-bar flex flex-row flex-center">
+          <div class="title-wrapper block center-element">
+            <img class="logo" src="http://feathersjs.com/img/feathers-logo-wide.png"
+              alt="Feathers Logo">
+            <span class="title">Chat</span>
+          </div>
+        </header>
+      
+        <div class="flex flex-row flex-1 clear">
+          <aside class="sidebar col col-3 flex flex-column flex-space-between">
+            <header class="flex flex-row" style="display: flex; justify-content: space-between; align-items: center;">
+              <h4 class="font-300">
+                In <span class="font-600 room-count">0</span> rooms
+              </h4>
+              <button id="add-room" class="button button-primary"><i class="fa fa-plus"></i></button>
+            </header>
+          
+            <ul class="flex flex-column flex-1 list-unstyled room-list"></ul>
+          </aside>
+      
+          <div class="flex flex-column col col-9">
+            <main class="chat flex flex-column flex-1 clear"></main>
+      
+            <form class="flex flex-row flex-space-between" id="send-message">
+              <input type="text" name="text" class="flex flex-1">
+              <button class="button-primary" type="submit">Send</button>
+            </form>
+          </div>
+
+          <aside class="sidebar col col-3 flex flex-column flex-space-between">
+            <header class="flex flex-row flex-center">
+              <h4 class="font-300 text-center">
+                <span class="font-600 room-name"></span>
+              </h4>
+            </header>
+      
+            <ul class="flex flex-column flex-1 list-unstyled user-list"></ul>
+            <footer class="flex flex-row flex-center">
+              <a href="#" id="exit" class="button button-primary">
+                Leave room
+              </a>
+            </footer>
+          </aside>
+        </div>
+      </main>
+    </div>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/moment.js/2.12.0/moment.js"></script>
+    <script src="//unpkg.com/@feathersjs/client@^4.3.0/dist/feathers.js"></script>
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/jwt-decode/build/jwt-decode.min.js"></script>
+    <script src="chat_room.js"></script>
+  </body>
+</html>

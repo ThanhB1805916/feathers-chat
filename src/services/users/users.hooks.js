@@ -29,7 +29,7 @@ module.exports = {
 
         try {
           await session.run(
-            "CREATE (nd:NguoiDung {id: $id, email: $email, avatar: $avatar})",
+            "CREATE (nd:User {id: $id, email: $email, avatar: $avatar})",
             {
               id: result._id,
               email: result.email,
