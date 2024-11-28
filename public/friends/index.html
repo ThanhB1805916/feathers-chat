@@ -23,12 +23,19 @@
     />
   </head>
   <body>
-    <div id="app" class="">
-      <div id="suggest"></div>
+    <div id="app" class="container">
+      <div class="">
+        <h3 class="text-primary">Người bạn có thể biết:</h3>
+        <div
+          id="suggest"
+          class="d-flex overflow-auto"
+          style="width: 100vh"
+        ></div>
+      </div>
     </div>
 
     <template id="friend-template">
-      <div class="card" style="width: 10rem">
+      <div class="card mr-2" style="width: 10rem; flex-shrink: 0">
         <img src="" alt="avatar" id="avatar" class="card-img-top" />
         <h3 id="email"></h3>
         <div class="card-body">

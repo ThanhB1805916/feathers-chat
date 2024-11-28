@@ -21,6 +21,37 @@ const showFriend = async () => {
     friendDiv.querySelector("#avatar").src = friend.avatar;
     friendDiv.querySelector("#email").textContent = friend.email;
 
+    suggest.appendChild(friendDiv);
+  });
+  friends.forEach((friend) => {
+    const friendDiv = document.importNode(template, true); // Create a copy of template
+
+    friendDiv.querySelector("#avatar").src = friend.avatar;
+    friendDiv.querySelector("#email").textContent = friend.email;
+
+    suggest.appendChild(friendDiv);
+  });
+  friends.forEach((friend) => {
+    const friendDiv = document.importNode(template, true); // Create a copy of template
+
+    friendDiv.querySelector("#avatar").src = friend.avatar;
+    friendDiv.querySelector("#email").textContent = friend.email;
+
+    suggest.appendChild(friendDiv);
+  });
+  friends.forEach((friend) => {
+    const friendDiv = document.importNode(template, true); // Create a copy of template
+
+    friendDiv.querySelector("#avatar").src = friend.avatar;
+    friendDiv.querySelector("#email").textContent = friend.email;
+
+    suggest.appendChild(friendDiv);
+  });
+  friends.forEach((friend) => {
+    const friendDiv = document.importNode(template, true); // Create a copy of template
+
+    friendDiv.querySelector("#avatar").src = friend.avatar;
+    friendDiv.querySelector("#email").textContent = friend.email;
 
     suggest.appendChild(friendDiv);
   });
