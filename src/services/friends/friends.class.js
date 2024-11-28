@@ -10,15 +10,14 @@ exports.Friends = class Friends {
     // Example: Find all friends or filter by a property (e.g., name)
     const result = await session.run(
       `
-      MATCH (n:NguoiDung {id: $id})
-      -[:BAN_BE]->(f:NguoiDung)
-      RETURN f;
+      MATCH (n:NguoiDung {id: $id})-[:BAN_BE]->(b:NguoiDung)
+      RETURN b;
       `,
       { id: user._id }
     );
 
     // Return friends' properties
-    return result.records.map((record) => record.get("f").properties);
+    return result.records.map((record) => record.get("b").properties);
   }
 
   // Create a new friend node
