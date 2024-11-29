@@ -11,7 +11,7 @@ client.configure(feathers.authentication());
 
 const showSuggestFriend = async () => {
   const suggest = document.getElementById("suggest");
-  const template = document.getElementById("suggest-template").content;
+  const template = document.getElementById("suggest-template");
   const auth = await client.get("authentication");
 
   const friends = await client.service("friends").find({
@@ -22,11 +22,35 @@ const showSuggestFriend = async () => {
   });
 
   friends.forEach((friend) => {
-    const friendDiv = document.importNode(template, true); // Create a copy of template
+    const friendDiv = document.importNode(template.content, true);
 
+    // Set a unique ID for the cloned element
+    const containerDiv = friendDiv.querySelector("div"); // Adjust if the template's root is different
+    containerDiv.id = `suggest-${friend.id}`;
     friendDiv.querySelector("#avatar").src = friend.avatar;
     friendDiv.querySelector("#email").textContent = friend.email;
 
+    // Attach click event to the button
+    const ketBanButton = friendDiv.querySelector(".btn-primary");
+    ketBanButton.addEventListener("click", async () => {
+      try {
+        await client.service("friends").create({
+          id1: auth.user._id,
+          id2: friend.id,
+        });
+
+        console.log("Kết bạn clicked for ", friend.email);
+
+        // Remove the friendDiv after the action
+        if (containerDiv) {
+          containerDiv.remove();
+        }
+      } catch (error) {
+        console.error("Error adding friend:", error);
+      }
+    });
+
+    // Append the cloned template content to the suggest container
     suggest.appendChild(friendDiv);
   });
 };
