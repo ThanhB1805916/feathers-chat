@@ -41,10 +41,9 @@ const showSuggestFriend = async () => {
 
         console.log("Kết bạn clicked for ", friend.email);
 
-        // Remove the friendDiv after the action
-        if (containerDiv) {
-          containerDiv.remove();
-        }
+        // Disable the button and show an alert
+        ketBanButton.disabled = true;
+        alert("Đã gửi lời mời kết bạn");
       } catch (error) {
         console.error("Error adding friend:", error);
       }
