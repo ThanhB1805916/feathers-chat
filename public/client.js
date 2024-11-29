@@ -168,7 +168,7 @@ const showChat = async () => {
   const users = await client.service("users").find();
 
   // Add each user to the list
-  users.data.forEach(addUser);
+  users.data.forEach(friendCreated);
 };
 
 // Retrieve email/password object from the login/signup page
@@ -263,7 +263,7 @@ addEventListener("#send-message", "submit", async (ev) => {
 client.service("messages").on("created", addMessage);
 
 // We will also see when new users get created in real-time
-client.service("users").on("created", addUser);
+client.service("users").on("created", friendCreated);
 
 // Call login right away so we can show the chat window
 // If the user can already be authenticated

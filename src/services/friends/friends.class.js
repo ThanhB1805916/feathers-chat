@@ -22,7 +22,7 @@ exports.Friends = class Friends {
     const result = await session.run(
       `
       MATCH (u1:User {id: $id})-[:FRIEND]-(u2:User)
-      RETURN u2
+      RETURN DISTINCT u2
       LIMIT $limit;
       `,
       { id: id, limit: neo4j.int(query.limit || 10) }
@@ -145,6 +145,7 @@ exports.Friends = class Friends {
 
     // Return friends' properties
     return result.records.map((record) => ({
+      beFriend: true,
       u1: record.get("u1").properties,
       u2: record.get("u2").properties,
     }));
