@@ -1,4 +1,5 @@
 /* global io, feathers, moment */
+
 // Establish a Socket.io connection
 const socket = io();
 // Initialize our Feathers client application through Socket.io
@@ -34,11 +35,15 @@ const showSuggestFriend = async () => {
     const ketBanButton = friendDiv.querySelector(".btn-primary");
     ketBanButton.addEventListener("click", async () => {
       try {
-        await client.service("friends").create({
-          beFriend: true,
-          id1: auth.user._id,
-          id2: friend.id,
-        });
+        await client.service("friends").create(
+          {
+            id1: auth.user._id,
+            id2: friend.id,
+          },
+          {
+            query: { beFriend: true },
+          }
+        );
 
         console.log("Kết bạn clicked for ", friend.email);
 

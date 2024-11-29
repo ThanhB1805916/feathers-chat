@@ -114,6 +114,14 @@ exports.Friends = class Friends {
       { id1: data.id1, id2: data.id2 }
     );
 
+    await session.run(
+      `
+      MATCH (u1:User {id: $id1})-[r:BE_FRIEND]-(u2:User {id: $id2})
+      DELETE r;
+      `,
+      { id1: data.id1, id2: data.id2 }
+    );
+
     // Return friends' properties
     return result.records.map((record) => ({
       u1: record.get("u1").properties,
@@ -147,7 +155,6 @@ exports.Friends = class Friends {
     const session = driver.session();
 
     const { query } = params;
-    console.log("🚀 ~ Friends ~ remove ~ query:", query);
 
     if (query.beFriend) {
       return this.removeBeFriend(id, params);
@@ -168,7 +175,6 @@ exports.Friends = class Friends {
     const session = driver.session();
 
     const { query } = params;
-    console.log("🚀 ~ Friends ~ removeBeFriend ~ query:", query);
 
     const result = await session.run(
       `
