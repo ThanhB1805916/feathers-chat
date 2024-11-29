@@ -9,14 +9,14 @@ module.exports = {
     all: [ authenticate('jwt') ],
     find: [],
     get: [],
-    create: [processMessage()],
+    create: [],
     update: [],
     patch: [],
     remove: []
   },
 
   after: {
-    all: [populateUser()],
+    all: [],
     find: [],
     get: [],
     create: [],
