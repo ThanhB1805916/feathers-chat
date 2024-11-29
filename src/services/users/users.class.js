@@ -6,7 +6,7 @@ const crypto = require("crypto");
 // The Gravatar image service
 const gravatarUrl = "https://s.gravatar.com/avatar";
 // The size query. Our chat needs 60px images
-const query = "s=60";
+const query = "d=identicon&s=60";
 // Returns the Gravatar image for an email
 const getGravatar = (email) => {
   // Gravatar uses MD5 hashes from an email address (all lowercase) to get the image

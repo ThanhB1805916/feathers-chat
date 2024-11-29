@@ -9,8 +9,104 @@ client.configure(feathers.socketio(socket));
 // Use localStorage to store our login token
 client.configure(feathers.authentication());
 
-const showFriend = async () => {
+const showSuggestFriend = async () => {
   const suggest = document.getElementById("suggest");
+  const template = document.getElementById("suggest-template").content;
+
+  const friends = await client.service("friends").find();
+
+  friends.forEach((friend) => {
+    const friendDiv = document.importNode(template, true); // Create a copy of template
+
+    friendDiv.querySelector("#avatar").src = friend.avatar;
+    friendDiv.querySelector("#email").textContent = friend.email;
+
+    suggest.appendChild(friendDiv);
+  });
+  friends.forEach((friend) => {
+    const friendDiv = document.importNode(template, true); // Create a copy of template
+
+    friendDiv.querySelector("#avatar").src = friend.avatar;
+    friendDiv.querySelector("#email").textContent = friend.email;
+
+    suggest.appendChild(friendDiv);
+  });
+  friends.forEach((friend) => {
+    const friendDiv = document.importNode(template, true); // Create a copy of template
+
+    friendDiv.querySelector("#avatar").src = friend.avatar;
+    friendDiv.querySelector("#email").textContent = friend.email;
+
+    suggest.appendChild(friendDiv);
+  });
+  friends.forEach((friend) => {
+    const friendDiv = document.importNode(template, true); // Create a copy of template
+
+    friendDiv.querySelector("#avatar").src = friend.avatar;
+    friendDiv.querySelector("#email").textContent = friend.email;
+
+    suggest.appendChild(friendDiv);
+  });
+  friends.forEach((friend) => {
+    const friendDiv = document.importNode(template, true); // Create a copy of template
+
+    friendDiv.querySelector("#avatar").src = friend.avatar;
+    friendDiv.querySelector("#email").textContent = friend.email;
+
+    suggest.appendChild(friendDiv);
+  });
+};
+
+const showAddFriend = async () => {
+  const suggest = document.getElementById("add-friend");
+  const template = document.getElementById("add-friend-template").content;
+
+  const friends = await client.service("friends").find();
+
+  friends.forEach((friend) => {
+    const friendDiv = document.importNode(template, true); // Create a copy of template
+
+    friendDiv.querySelector("#avatar").src = friend.avatar;
+    friendDiv.querySelector("#email").textContent = friend.email;
+
+    suggest.appendChild(friendDiv);
+  });
+  friends.forEach((friend) => {
+    const friendDiv = document.importNode(template, true); // Create a copy of template
+
+    friendDiv.querySelector("#avatar").src = friend.avatar;
+    friendDiv.querySelector("#email").textContent = friend.email;
+
+    suggest.appendChild(friendDiv);
+  });
+  friends.forEach((friend) => {
+    const friendDiv = document.importNode(template, true); // Create a copy of template
+
+    friendDiv.querySelector("#avatar").src = friend.avatar;
+    friendDiv.querySelector("#email").textContent = friend.email;
+
+    suggest.appendChild(friendDiv);
+  });
+  friends.forEach((friend) => {
+    const friendDiv = document.importNode(template, true); // Create a copy of template
+
+    friendDiv.querySelector("#avatar").src = friend.avatar;
+    friendDiv.querySelector("#email").textContent = friend.email;
+
+    suggest.appendChild(friendDiv);
+  });
+  friends.forEach((friend) => {
+    const friendDiv = document.importNode(template, true); // Create a copy of template
+
+    friendDiv.querySelector("#avatar").src = friend.avatar;
+    friendDiv.querySelector("#email").textContent = friend.email;
+
+    suggest.appendChild(friendDiv);
+  });
+};
+
+const showFriend = async () => {
+  const suggest = document.getElementById("friend");
   const template = document.getElementById("friend-template").content;
 
   const friends = await client.service("friends").find();
@@ -64,11 +160,15 @@ const login = async () => {
     await client.reAuthenticate();
 
     // If successful, show the chat page
-    showFriend();
+    await Promise.all([showSuggestFriend(), showAddFriend()]);
   } catch (error) {
-    console.error(error);
     // If we got an error, navigate back login
-    window.location.href = "/";
+    if (error.name == "NotAuthenticated") {
+      window.location.href = "/";
+      return;
+    }
+
+    console.error(error);
   }
 };
 
