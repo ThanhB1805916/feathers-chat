@@ -12,41 +12,15 @@ client.configure(feathers.authentication());
 const showSuggestFriend = async () => {
   const suggest = document.getElementById("suggest");
   const template = document.getElementById("suggest-template").content;
+  const auth = await client.get("authentication");
 
-  const friends = await client.service("friends").find();
-
-  friends.forEach((friend) => {
-    const friendDiv = document.importNode(template, true); // Create a copy of template
-
-    friendDiv.querySelector("#avatar").src = friend.avatar;
-    friendDiv.querySelector("#email").textContent = friend.email;
-
-    suggest.appendChild(friendDiv);
+  const friends = await client.service("friends").find({
+    query: {
+      suggestion: true,
+      id: auth.user._id,
+    },
   });
-  friends.forEach((friend) => {
-    const friendDiv = document.importNode(template, true); // Create a copy of template
 
-    friendDiv.querySelector("#avatar").src = friend.avatar;
-    friendDiv.querySelector("#email").textContent = friend.email;
-
-    suggest.appendChild(friendDiv);
-  });
-  friends.forEach((friend) => {
-    const friendDiv = document.importNode(template, true); // Create a copy of template
-
-    friendDiv.querySelector("#avatar").src = friend.avatar;
-    friendDiv.querySelector("#email").textContent = friend.email;
-
-    suggest.appendChild(friendDiv);
-  });
-  friends.forEach((friend) => {
-    const friendDiv = document.importNode(template, true); // Create a copy of template
-
-    friendDiv.querySelector("#avatar").src = friend.avatar;
-    friendDiv.querySelector("#email").textContent = friend.email;
-
-    suggest.appendChild(friendDiv);
-  });
   friends.forEach((friend) => {
     const friendDiv = document.importNode(template, true); // Create a copy of template
 
