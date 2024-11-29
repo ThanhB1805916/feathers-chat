@@ -35,6 +35,7 @@ const showSuggestFriend = async () => {
     ketBanButton.addEventListener("click", async () => {
       try {
         await client.service("friends").create({
+          beFriend: true,
           id1: auth.user._id,
           id2: friend.id,
         });
@@ -54,50 +55,61 @@ const showSuggestFriend = async () => {
   });
 };
 
-const showAddFriend = async () => {
-  const suggest = document.getElementById("add-friend");
-  const template = document.getElementById("add-friend-template").content;
+const showBeFriend = async () => {
+  const suggest = document.getElementById("be-friend");
+  const template = document.getElementById("be-friend-template");
+  const auth = await client.get("authentication");
+  console.log("🚀 ~ showBeFriend ~ auth:", auth.user);
 
-  const friends = await client.service("friends").find();
-
-  friends.forEach((friend) => {
-    const friendDiv = document.importNode(template, true); // Create a copy of template
-
-    friendDiv.querySelector("#avatar").src = friend.avatar;
-    friendDiv.querySelector("#email").textContent = friend.email;
-
-    suggest.appendChild(friendDiv);
+  const friends = await client.service("friends").find({
+    query: {
+      beFriend: true,
+      id: auth.user._id,
+    },
   });
-  friends.forEach((friend) => {
-    const friendDiv = document.importNode(template, true); // Create a copy of template
 
+  friends.forEach((friend) => {
+    const friendDiv = document.importNode(template.content, true);
+
+    // Set a unique ID for the cloned element
+    const containerDiv = friendDiv.querySelector("div"); // Adjust if the template's root is different
+    containerDiv.id = `suggest-${friend.id}`;
     friendDiv.querySelector("#avatar").src = friend.avatar;
     friendDiv.querySelector("#email").textContent = friend.email;
 
-    suggest.appendChild(friendDiv);
-  });
-  friends.forEach((friend) => {
-    const friendDiv = document.importNode(template, true); // Create a copy of template
+    // Attach click event to the button
+    const dongYButton = friendDiv.querySelector(".btn-success");
+    dongYButton.addEventListener("click", async () => {
+      try {
+        await client.service("friends").create({
+          id1: auth.user._id,
+          id2: friend.id,
+        });
 
-    friendDiv.querySelector("#avatar").src = friend.avatar;
-    friendDiv.querySelector("#email").textContent = friend.email;
+        console.log("Đồng ý clicked for ", friend.email);
 
-    suggest.appendChild(friendDiv);
-  });
-  friends.forEach((friend) => {
-    const friendDiv = document.importNode(template, true); // Create a copy of template
+        containerDiv.remove();
+      } catch (error) {
+        console.error("Error adding friend:", error);
+      }
+    });
 
-    friendDiv.querySelector("#avatar").src = friend.avatar;
-    friendDiv.querySelector("#email").textContent = friend.email;
+    const tuChoiButton = friendDiv.querySelector(".btn-outline-danger");
+    tuChoiButton.addEventListener("click", async () => {
+      try {
+        await client.service("friends").remove(null, {
+          query: { beFriend: true, id1: auth.user._id, id2: friend.id },
+        });
 
-    suggest.appendChild(friendDiv);
-  });
-  friends.forEach((friend) => {
-    const friendDiv = document.importNode(template, true); // Create a copy of template
+        console.log("Từ chối clicked for ", friend.email);
 
-    friendDiv.querySelector("#avatar").src = friend.avatar;
-    friendDiv.querySelector("#email").textContent = friend.email;
+        containerDiv.remove();
+      } catch (error) {
+        console.error("Error adding friend:", error);
+      }
+    });
 
+    // Append the cloned template content to the suggest container
     suggest.appendChild(friendDiv);
   });
 };
@@ -157,7 +169,7 @@ const login = async () => {
     await client.reAuthenticate();
 
     // If successful, show the chat page
-    await Promise.all([showSuggestFriend(), showAddFriend()]);
+    await Promise.all([showSuggestFriend(), showBeFriend(), showFriend()]);
   } catch (error) {
     // If we got an error, navigate back login
     if (error.name == "NotAuthenticated") {
