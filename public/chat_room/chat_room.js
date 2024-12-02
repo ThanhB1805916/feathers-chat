@@ -23,8 +23,6 @@ const showRoomList = async () => {
     }
   );
 
-  console.log(rooms);
-
   rooms.forEach(addRoom);
 }
 
@@ -99,14 +97,15 @@ const addUnjoinedRoom = (room) => {
 
 const joinRoom = async (room) => {
   // open a promt to ask yes/no to join room
-  console.log(`Ask to join ${room.name}`);
   const join = confirm(`Do you want to join room ${room.name}?`);
   if(join) {
-    await client.service("rooms").update(room.id, {
-      $push: {
-        joinedBy: currentUser._id,
+    await client.service("rooms").update(room.id, { },
+    {
+      query: {
+        join: true,
       }
-    });
+    })
+    ;
     
     await openRoom(room);
 
@@ -116,7 +115,6 @@ const joinRoom = async (room) => {
 }
 
 const openRoom = async (room) => {
-  alert(`Open room ${room.name}`);
   const roomName = document.querySelector(".room-name");
   roomName.innerHTML = room.name;
 
@@ -124,7 +122,38 @@ const openRoom = async (room) => {
   document.querySelector('.chat-content').style.display = 'flex';
   document.querySelector('.room-users').style.display = 'flex';
 
-  currentRoom = room;
+  await loadRoomInfo(room);
+  
+  await Promise.all([
+    showUserList(),
+    showMessageList()
+  ]);
+}
+
+const loadRoomInfo = async (room) => {
+  const roomData = await client.service("rooms").find({
+    query: {
+      roomId: room.id,
+    },
+  });
+
+  currentRoom = roomData[0];
+}
+
+const leaveRoom = async () => {
+  let leave = confirm(`Confirm to leave room ${currentRoom.name}?`);
+
+  if(leave) {
+    await client.service("rooms").update(currentRoom.id, { },
+    {
+      query: {
+        leave: true,
+      }
+    });
+
+    await closeRoom();
+    showRoomList();
+  }
 }
 
 const closeRoom = async () => {
@@ -135,6 +164,74 @@ const closeRoom = async () => {
   currentRoom = null;
 }
 
+const showUserList = async () => {
+  const roomUsers = document.querySelector(".user-list");
+  roomUsers.innerHTML = '';
+  currentRoom.users.forEach(addUser);
+}
+
+const addUser = (user) => {
+  const roomUsers = document.querySelector(".user-list");
+
+  const li = document.createElement('li');
+  li.innerHTML = `
+    <a class="block relative" href="#" id="user-id-${user.id}">
+      <img src="${user.avatar}" alt="" class="avatar">
+      <span class="absolute username"
+        style="
+            font-size: 18;
+            font-weight: bold;
+        "
+      >${escape(
+        user.email
+      )}</span>
+    </a>
+  `;
+
+  roomUsers.appendChild(li);  
+}
+
+const showMessageList = async () => {
+  const messages = document.getElementById("chat-messages");
+  messages.innerHTML = '';
+
+  const messageList = await client.service("messages").find({
+    query: {
+      roomId: currentRoom.id,
+    },
+  });
+
+  messageList.forEach(addMessage);
+}
+
+let lastUserId=null;
+const addMessage = (message) => {
+  const messages = document.getElementById("chat-messages");
+  const item = document.createElement("li");
+  item.style.listStyleType = "none";
+  item.innerHTML =``;
+
+  if (message.user.id === currentUser._id) {
+    item.style.textAlign = "right"; 
+  }
+  if (lastUserId == null || lastUserId != message.user.id) {
+    item.innerHTML += `
+      <div>
+        <img src="${message.user.avatar}" alt="" class="avatar">
+        <strong class="username">${escape(message.user.email)}</strong>
+      </div>
+    `;
+  }
+  
+  item.innerHTML += `
+    <p>${escape(message.text)}</p>
+  `;
+  
+  messages.appendChild(item);
+  messages.scrollTop = messages.scrollHeight;
+
+  lastUserId = message.user.id;
+}
 
 // Log in either using the given email/password or the token from storage
 let currentUser = null;
@@ -185,7 +282,7 @@ addEventListener("#send-message", "submit", async (ev) => {
   // Create a new message and then clear the input field
   await client.service("messages").create({
     text: input.value,
-    roomId: 123,
+    roomId: currentRoom.id,
   });
 
   input.value = "";
@@ -206,7 +303,6 @@ addEventListener('#searchRoom', 'input', async (ev) => {
   clearTimeout(this.delay);
   this.delay = setTimeout(async function(){
     var text = document.getElementById('searchRoom').value;
-      console.log(text);
       if(text && text != '')
           await showUnjoinedRoomList(text);
       else
@@ -217,6 +313,31 @@ addEventListener('#searchRoom', 'input', async (ev) => {
 client.service(`rooms`).on("created", (data) => {
   if(data.createdBy == currentUser._id) 
     addRoom(data);
+});
+
+client.service('rooms').on('updated', async (data) => {
+  if(currentRoom?.id == data.room.id) {
+    await loadRoomInfo(currentRoom);
+    await showUserList();
+  }
+});
+
+client.service('messages').on('created', async (data) => {
+  if(currentRoom?.id == data.room.id) {
+    addMessage(data);
+  }
+});
+
+
+const leaveRoomBtn = document.getElementById('leaveRoom');
+leaveRoomBtn.addEventListener('click', async () => {
+  await leaveRoom();
+});
+
+const logOutBtn = document.getElementById('logOut');
+logOutBtn.addEventListener('click', async () => {
+  await client.logout();
+  window.location.href = '/';
 });
 
 // Call login right away so we can show the chat window

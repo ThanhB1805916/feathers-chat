@@ -36,13 +36,20 @@ exports.Rooms = class Rooms {
       // Find a specific room by its unique id
       cypherQuery = `
         MATCH (r:Room {id: $roomId})
-        RETURN r
+        OPTIONAL MATCH (r)-[:CREATED_BY|:JOINED]-(u:User)
+        RETURN r, COLLECT(u) AS users
       `;
       queryParams = { roomId: query.roomId };
 
       const result = await session.run(cypherQuery, queryParams);
-      // Map over the result and extract properties of Room nodes
-      return result.records.map((record) => record.get("r").properties);
+
+      // Create a map
+      // {roomData: r, users: users}
+      return result.records.map((record) => {
+        const roomData = record.get("r").properties;
+        const users = record.get("users").map((user) => user.properties);
+        return { ...roomData, users };
+      });
     } else {
       // Find all rooms created by a specific user
       cypherQuery = `
@@ -104,19 +111,53 @@ exports.Rooms = class Rooms {
   }
 
   async update(id, data, params) {
-    const session = driver.session();
-    const { user } = params;
+    const { query, user } = params;
 
+    if(query.join) {
+      return await this.joinRoom(user._id, id);
+    } else if(query.leave) {
+      return await this.leaveRoom(user._id, id);
+    }
+    else {
+      throw new Error("BadRequest: 'join' or 'leave' query parameter is required to update a Room.");
+    }
+  }
+
+  async joinRoom(userId, roomId){
+    const session = driver.session();
     const result = await session.run(
       `
       MATCH (u:User {id: $userId}), (r:Room {id: $roomId})
       MERGE (u)-[:JOINED]->(r)
       RETURN u, r
       `,
-      { userId: user._id, roomId: id }
+      { userId: userId, roomId: roomId }
     );
 
-    return result.records.map((record) => record.get("r").properties);
+    
+    // return user and room
+    return result.records.map((record) => {
+      const user = record.get("u").properties;
+      const room = record.get("r").properties;
+      return { action: 'join', user, room };
+    });
+  }
+
+  async leaveRoom(userId, roomId){
+    const session = driver.session();
+    const result = await session.run(
+      `
+      MATCH (r:Room {id: $roomId})
+      OPTIONAL MATCH (r)-[rel]-(u:User {id: $userId})
+      DELETE rel
+      WITH r
+      WHERE NOT EXISTS { MATCH (r)-[]-() }
+      DELETE r
+      `,
+      { roomId: roomId, userId: userId }
+    );
+
+    return { action: 'leave', user: {_id: userId}, room: {id: roomId} };
   }
 
   async remove(id) {
@@ -155,7 +196,12 @@ exports.Rooms = class Rooms {
         MATCH (r:Room)
         WHERE toLower(r.name) CONTAINS toLower($name)
         AND NOT EXISTS {
-          MATCH (r)-[:CREATED_BY|:JOINED]->(:User {id: $userId})
+          MATCH (r)-[:CREATED_BY]->(:User {id: $userId})
+          RETURN 1
+        }
+        AND NOT EXISTS {
+          MATCH (:User {id: $userId})-[:JOINED]->(r)
+          RETURN 1
         }
         RETURN r
       `, 
