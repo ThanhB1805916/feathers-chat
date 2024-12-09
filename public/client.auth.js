@@ -18,18 +18,20 @@ const login = async () => {
     // First try to log in with an existing JWT
     return await client.reAuthenticate();
   } catch (error) {
-    // If that errors, log in with email/password
-    // Here we would normally show a login page
-    // to get the login information
-    return await client.authenticate({
-      strategy: "local",
-      email: "alex@gmail.com",
-      password: "1234",
-    });
+    // go to login page
+    console.error("Not authenticated", error);
+    window.location.href = '/login';
   }
 };
 
 const main = async () => {
+  console.log("Starting client...");
+  
+  if (window.location.pathname === '/') {
+    window.location.href = '/login';
+    return;
+  }
+
   const auth = await login();
 
   console.log("User is authenticated", auth);

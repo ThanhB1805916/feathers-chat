@@ -58,4 +58,10 @@ module.exports = function (app) {
   //     app.channel(`emails/${data.recipientEmail}`)
   //   ];
   // });
+  
+  // app.service('rooms').publish((data, context) => {
+  //   // Send the event only to the connection that made the call
+  //   console.log(`sent rooms_${context.params.user._id}`);
+  //   return app.channel(`rooms_${context.params.user._id}`);
+  // });
 }
