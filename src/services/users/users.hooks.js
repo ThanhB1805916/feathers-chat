@@ -1,5 +1,5 @@
 const { authenticate } = require("@feathersjs/authentication").hooks;
-const { session } = require("../../neo4j");
+const { driver } = require("../../neo4j");
 
 const { hashPassword, protect } =
   require("@feathersjs/authentication-local").hooks;
@@ -26,6 +26,8 @@ module.exports = {
     create: [
       async (context) => {
         const { result } = context; // The newly created user
+
+        const session = await driver.session();
 
         try {
           await session.run(
