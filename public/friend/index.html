@@ -1,0 +1,104 @@
+<html lang="en">
+  <head>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1, user-scalable=0"
+    />
+    <title>FeathersJS chat</title>
+    <link rel="shortcut icon" href="../favicon.ico" />
+    <link
+      rel="stylesheet"
+      href="//unpkg.com/feathers-chat@4.0.0/public/base.css"
+    />
+    <link
+      rel="stylesheet"
+      href="//unpkg.com/feathers-chat@4.0.0/public/chat.css"
+    />
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH"
+      crossorigin="anonymous"
+    />
+  </head>
+  <body>
+    <div id="app" class="container">
+      <div class="">
+        <h3 class="text-primary">Người bạn có thể biết:</h3>
+        <div
+          id="suggest"
+          class="d-flex border border-secondary p-2"
+          style="overflow-x: auto; width: 100%"
+        ></div>
+      </div>
+
+      <div class="mt-5">
+        <h3 class="text-primary">Lời mời kết bạn:</h3>
+        <div
+          id="be-friend"
+          class="d-flex border border-secondary p-2"
+          style="overflow-x: auto; width: 100%"
+        ></div>
+      </div>
+
+      <div class="mt-5">
+        <h3 class="text-primary">Bạn bè:</h3>
+        <div
+          id="friend"
+          class="d-flex border border-secondary p-2"
+          style="overflow-x: auto; width: 100%"
+        ></div>
+      </div>
+    </div>
+
+    <template id="suggest-template">
+      <div class="card me-2" style="width: 10em; flex-shrink: 0">
+        <img src="" alt="avatar" id="avatar" class="card-img-top" />
+        <div class="card-body">
+          <h5 id="email"></h5>
+          <p class="card-text">
+            <button type="button" class="btn btn-primary">Kết bạn</button>
+          </p>
+        </div>
+      </div>
+    </template>
+
+    <template id="be-friend-template">
+      <div class="card me-2" style="width: 10rem; flex-shrink: 0">
+        <img src="" alt="avatar" id="avatar" class="card-img-top" />
+        <div class="card-body">
+          <h3 id="email"></h3>
+          <p class="card-text">
+            <button type="button" class="btn btn-success">Đồng ý</button>
+            <button type="button" class="btn btn-outline-danger">X</button>
+          </p>
+        </div>
+      </div>
+    </template>
+
+    <template id="friend-template">
+      <div class="card me-2" style="width: 10rem; flex-shrink: 0">
+        <img src="" alt="avatar" id="avatar" class="card-img-top" />
+        <div class="card-body">
+          <h3 id="email"></h3>
+          <p class="card-text">
+            <button type="button" class="btn btn-outline-primary">
+              Nhắn tin
+            </button>
+          </p>
+        </div>
+      </div>
+    </template>
+
+    <script src="//cdnjs.cloudflare.com/ajax/libs/moment.js/2.12.0/moment.js"></script>
+    <script src="//unpkg.com/@feathersjs/client@^4.3.0/dist/feathers.js"></script>
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="friend.js"></script>
+    <script
+      src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+      integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
+      crossorigin="anonymous"
+    ></script>
+  </body>
+</html>

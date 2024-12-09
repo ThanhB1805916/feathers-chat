@@ -46,7 +46,7 @@ const login = async (credentials) => {
     if (document.querySelectorAll(".login").length && error) {
       document
         .querySelector("#login-error").textContent = error.message;
-    } 
+    }
   }
 };
 

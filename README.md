@@ -2,6 +2,9 @@
 
 - <https://neo4j.com/docs/operations-manual/current/docker/docker-compose-standalone/>
 
+- http://127.0.0.1:3030/chat_room/
+- http://127.0.0.1:7474/browser/
+
 # feathers-chat
 
 >

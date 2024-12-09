@@ -1,4 +1,4 @@
-"use strict"
+"use strict";
 
 const neo4j = require("neo4j-driver");
 
@@ -8,6 +8,4 @@ const driver = neo4j.driver(
   neo4j.auth.basic("neo4j", "neo4j@123") // Credentials
 );
 
-const session = driver.session();
-
-module.exports = { driver, session, neo4j };
+module.exports = { driver, neo4j };
