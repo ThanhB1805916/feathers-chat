@@ -162,6 +162,7 @@ const closeRoom = async () => {
   document.querySelector('.room-users').style.display = 'none';
 
   currentRoom = null;
+  lastUserId = null;
 }
 
 const showUserList = async () => {
