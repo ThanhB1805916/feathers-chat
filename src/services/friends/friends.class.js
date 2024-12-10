@@ -38,12 +38,29 @@ exports.Friends = class Friends {
     const { query, user } = params;
     const userId = query.id || user._id;
 
-    const result = await session.run(
+    let result = await session.run(
       `
       MATCH (user:User {id: $userId})-[:FRIEND]->(friend:User)-[:FRIEND]->(suggestion:User)
       WHERE NOT (user)-[:FRIEND]->(suggestion) AND suggestion.id <> $userId
-      RETURN DISTINCT suggestion
-      LIMIT $limit;
+        RETURN DISTINCT suggestion
+        LIMIT $limit;
+      `,
+      { userId: userId, limit: neo4j.int(query.limit || 10) }
+    );
+
+    if (result.records.length > 0) {
+      return result.records.map(
+        (record) => record.get("suggestion").properties
+      );
+    }
+
+    result = await session.run(
+      `
+        MATCH (suggestion:User)
+        WHERE NOT (:User {id: $userId})-[:FRIEND]->(suggestion)
+          AND suggestion.id <> $userId
+        RETURN DISTINCT suggestion
+        LIMIT $limit;
       `,
       { userId: userId, limit: neo4j.int(query.limit || 10) }
     );
