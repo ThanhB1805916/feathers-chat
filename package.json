@@ -37,14 +37,14 @@
     "ignore": []
   },
   "dependencies": {
-    "@feathersjs/authentication": "^4.5.15",
+    "@feathersjs/authentication": "^4.5.18",
     "@feathersjs/authentication-local": "^4.5.15",
     "@feathersjs/authentication-oauth": "^4.5.15",
     "@feathersjs/configuration": "^4.5.15",
     "@feathersjs/errors": "^4.5.15",
     "@feathersjs/express": "^4.5.15",
     "@feathersjs/feathers": "^4.5.15",
-    "@feathersjs/socketio": "^4.5.15",
+    "@feathersjs/socketio": "^5.0.31",
     "@feathersjs/transport-commons": "^4.5.15",
     "@seald-io/nedb": "^2.2.2",
     "compression": "^1.7.4",
@@ -56,9 +56,9 @@
     "winston": "^3.7.2"
   },
   "devDependencies": {
-    "axios": "^0.27.2",
-    "mocha": "^9.2.2",
-    "nodemon": "^2.0.16",
+    "axios": "^0.28.0",
+    "mocha": "^11.0.1",
+    "nodemon": "^2.0.22",
     "standard": "^17.0.0"
   }
 }
