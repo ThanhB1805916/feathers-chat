@@ -177,7 +177,8 @@ const showFriend = async () => {
 
         // Disable the button and show an alert
         ketBanButton.disabled = true;
-        alert("Đã gửi lời mời kết bạn");
+        // alert("Đã gửi lời mời kết bạn");
+        window.location.replace("/chat_room");
       } catch (error) {
         console.error("Error adding friend:", error);
       }
